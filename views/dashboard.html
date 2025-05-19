@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<div class="container">
+    <div class="container">
         <header>
             <h1>Your Earnings Dashboard</h1>
             <nav>
@@ -16,12 +16,14 @@
                 <a href="/" id="logout">Logout</a>
             </nav>
         </header>
+        
         <div class="dashboard-content">
             <div class="stats-card">
                 <h2>Current Balance</h2>
                 <p class="balance">$<span id="current-balance">0.00</span></p>
             </div>
-<div class="stats-card">
+            
+            <div class="stats-card">
                 <h2>Ads Watched</h2>
                 <p class="ads-count"><span id="ads-watched">0</span></p>
             </div>
@@ -30,7 +32,9 @@
                 <h2>Estimated Earnings</h2>
                 <p class="estimated">$<span id="estimated-earnings">0.00</span> / month</p>
             </div>
-<div class="recent-activity">
+        </div>
+        
+        <div class="recent-activity">
             <h2>Recent Activity</h2>
             <ul id="activity-list">
                 <!-- Will be populated by JavaScript -->
