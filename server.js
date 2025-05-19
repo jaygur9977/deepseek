@@ -165,7 +165,7 @@ app.get('/watch-ad', (req, res) => {
 });
 
 // AdSense ads.txt route
-app.get('/ads.txt', (req, res) => {
+app.get('/Ads.txt', (req, res) => {
     const filePath = path.join(__dirname, 'ads.txt');
     
     // Check if file exists
@@ -174,7 +174,7 @@ app.get('/ads.txt', (req, res) => {
         res.sendFile(filePath);
     } else {
         // Default content if file doesn't exist (replace with your actual AdSense publisher ID)
-        const defaultAdsTxt = 'google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0';
+        const defaultAdsTxt = 'google.com, pub-2273253474084136, DIRECT, f08c47fec0942fa0';
         res.type('text/plain');
         res.send(defaultAdsTxt);
     }
