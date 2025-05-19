@@ -5,19 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch Ads - Earn Money</title>
     <link rel="stylesheet" href="/css/style.css">
-    
-    <!-- Google AdSense Verification Meta Tag -->
-    <meta name="google-adsense-account" content="ca-pub-2273253474084136">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Watch Ads & Earn Money</h1>
-            <nav>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/watch-ad" class="active">Watch Ads</a>
-                <a href="/" id="logout">Logout</a>
-            </nav>
         </header>
         
         <div class="ad-container">
@@ -25,37 +17,26 @@
             <p>Each ad you watch will earn you between $0.10 and $1.00</p>
             
             <div id="ad-display">
-                <!-- Ad content will be loaded here -->
                 <p>Ready to watch an ad? Click the button below!</p>
             </div>
             
             <button id="watch-ad-btn">Watch Ad & Earn Money</button>
-            
-            <div id="earnings-message" style="display: none;">
-                <p>You earned $<span id="earned-amount">0.00</span>!</p>
-                <p>Your new balance is $<span id="new-balance">0.00</span></p>
-            </div>
-            
-            <!-- Google AdSense placeholder -->
-            <div class="adsense-ad" style="margin-top: 20px; padding: 10px; border: 1px dashed #ccc;">
-                <p>Google AdSense Ad Would Display Here</p>
-                <small>(In a real implementation, this would show actual ads from Google AdSense)</small>
-            </div>
-
-            <!-- AdSense Full-size Ad -->
-            <div class="adsense-ad">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2273253474084136"
-                        crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2273253474084136"
-                     data-ad-slot="XXXXXXX"
-                     data-ad-format="auto"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
         </div>
+    </div>
+
+    <!-- Full-Screen Ad (Ad Placement) -->
+    <div class="adsense-fullscreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2273253474084136" crossorigin="anonymous"></script>
+        <!-- Full Screen Ad Code -->
+        <ins class="adsbygoogle"
+             style="display:block; width: 100%; height: 100%;"
+             data-ad-client="ca-pub-2273253474084136"
+             data-ad-slot="9946099168"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
 
     <script src="/js/script.js"></script>
