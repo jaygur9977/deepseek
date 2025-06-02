@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manual Ad Trigger</title>
+  <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
+  <meta name='admaven-placement' content=BqdY4rTs6>
+  <script>
+    // Define d and z in global scope so they can be used by both scripts
+    var d = 'groleegni.net';
+    var z = 9403877;
+    
+    // Initial ad script
+    (function(d,z,s){
+      s.src='https://'+d+'/401/'+z;
+      try{(document.body||document.documentElement).appendChild(s)}catch(e){}
+    })(d,z,document.createElement('script'));
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Click to Load Ad</h1>
+  <button onclick="loadAd()">Show Ad</button>
+
+  <script>
+    function loadAd() {
+      const s = document.createElement('script');
+      s.src = 'https://'+d+'/401/'+z; // Now using the globally defined d and z
+
+      try {
+        (document.body || document.documentElement).appendChild(s);
+        console.log('Ad script loaded manually.');
+      } catch (e) {
+        console.error('Ad failed to load:', e);
+      }
+    }
+  </script>
+
+</body>
+</html>

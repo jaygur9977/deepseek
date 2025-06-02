@@ -1,54 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch Ads - Earn Money</title>
-    <link rel="stylesheet" href="/css/style.css">
-   <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
-</head>
-<body>
-    <div class="container">
-        <header>
-
-            
-            <h1>Watch Ads & Earn Money</h1>
-            <nav>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/watch-ad" class="active">Watch Ads</a>
-                <a href="/" id="logout">Logout</a>
-            </nav>
-        </header>
-        
-        <div class="ad-container">
-            <h2>Click below to watch an ad and earn money</h2>
-            <p>Each ad you watch will earn you between $0.10 and $1.00</p>
-            
-            <div id="ad-display">
-              
-                <p>Ready to watch an ad? Click the button below!</p>
-            </div>
-            
-            <button id="watch-ad-btn">Watch Ad & Earn Money</button>
-            
-            <div id="earnings-message" style="display: none;">
-                <p>You earned $<span id="earned-amount">0.00</span>!</p>
-                <p>Your new balance is $<span id="new-balance">0.00</span></p>
-            </div>
-           
-            <div class="adsense-ad" style="margin-top: 20px; padding: 10px; border: 1px dashed #ccc;">
-                <p>Google AdSense Ad Would Display Here</p>
-                <small>(In a real implementation, this would show actual ads from Google AdSense)</small>
-            </div>
-        </div>
-    </div>
-
-    <script src="/js/script.js"></script>
-</body>
-</html> -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,10 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch Ads - Earn Money</title>
     <link rel="stylesheet" href="/css/style.css">
-   <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
-     <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://al5sm.com/tag.min.js',9404001,document.body||document.documentElement)</script>
-         <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
-    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
+    <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
+    <meta name='admaven-placement' content=BqdY4rTs6>
+    <style>
+        #ad-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #ad-frame-container {
+            width: 90%;
+            height: 80%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #ad-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #ad-timer {
+            color: white;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        #close-ad {
+            padding: 12px 30px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+        }
+        #watch-ad-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #cooldown-message {
+            color: red;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .fullscreen-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background: white;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -81,19 +88,186 @@
             </div>
             
             <button id="watch-ad-btn">Watch Ad & Earn Money</button>
+            <div id="cooldown-message" style="display: none;"></div>
             
             <div id="earnings-message" style="display: none;">
                 <p>You earned $<span id="earned-amount">0.00</span>!</p>
                 <p>Your new balance is $<span id="new-balance">0.00</span></p>
             </div>
-           
-            <div class="adsense-ad" style="margin-top: 20px; padding: 10px; border: 1px dashed #ccc;">
-                <p>Google AdSense Ad Would Display Here</p>
-                <small>(In a real implementation, this would show actual ads from Google AdSense)</small>
-            </div>
         </div>
     </div>
 
-    <script src="/js/script.js"></script>
+    <!-- Ad Popup Container -->
+    <div id="ad-popup">
+        <div id="ad-frame-container">
+            <iframe id="ad-frame" src="about:blank"></iframe>
+        </div>
+        <div id="ad-timer">30</div>
+        <button id="close-ad">Close Ad</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const watchAdBtn = document.getElementById('watch-ad-btn');
+            const adPopup = document.getElementById('ad-popup');
+            const adTimer = document.getElementById('ad-timer');
+            const closeAdBtn = document.getElementById('close-ad');
+            const earningsMessage = document.getElementById('earnings-message');
+            const earnedAmount = document.getElementById('earned-amount');
+            const newBalance = document.getElementById('new-balance');
+            const cooldownMessage = document.getElementById('cooldown-message');
+            const adFrame = document.getElementById('ad-frame');
+            
+            // Check authentication status
+            checkAuthStatus();
+            
+            // Check if user is on cooldown
+            checkAdCooldown();
+            
+            watchAdBtn.addEventListener('click', function() {
+                if (!isAuthenticated()) {
+                    alert('Please login first');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                // Show the fullscreen ad popup
+                adPopup.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                
+                // Load a random ad
+                loadRandomAd();
+                
+                // Start the timer
+                let seconds = 30;
+                adTimer.textContent = seconds;
+                
+                const timer = setInterval(function() {
+                    seconds--;
+                    adTimer.textContent = seconds;
+                    
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        closeAdBtn.style.display = 'block';
+                    }
+                }, 1000);
+                
+                // Disable the watch ad button
+                watchAdBtn.disabled = true;
+            });
+            
+            closeAdBtn.addEventListener('click', function() {
+                // Hide the ad popup
+                adPopup.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                
+                // Reset the ad frame
+                adFrame.src = 'about:blank';
+                
+                // Hide the close button
+                closeAdBtn.style.display = 'none';
+                
+                // Send request to server to credit earnings
+                creditEarnings();
+                
+                // Set cooldown
+                setAdCooldown();
+            });
+            
+            function loadRandomAd() {
+                // List of ad URLs (replace with your actual ad URLs)
+                const adUrls = [
+                    'https://example.com/ad1',
+                    'https://example.com/ad2',
+                    'https://example.com/ad3'
+                ];
+                
+                // Select a random ad URL
+                const randomAdUrl = adUrls[Math.floor(Math.random() * adUrls.length)];
+                
+                // Load the ad in the iframe
+                adFrame.src = randomAdUrl;
+            }
+            
+            function isAuthenticated() {
+                return localStorage.getItem('token') !== null;
+            }
+            
+            function checkAuthStatus() {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please login to watch ads');
+                    window.location.href = '/';
+                }
+            }
+            
+            function creditEarnings() {
+                const userId = localStorage.getItem('userId');
+                const token = localStorage.getItem('token');
+                
+                fetch(`/api/watch-ad/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        earnedAmount.textContent = data.earnings.toFixed(2);
+                        newBalance.textContent = data.newBalance.toFixed(2);
+                        earningsMessage.style.display = 'block';
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing your request');
+                });
+            }
+            
+            function setAdCooldown() {
+                localStorage.setItem('lastAdWatch', Date.now());
+                checkAdCooldown();
+            }
+            
+            function checkAdCooldown() {
+                const lastAdWatch = localStorage.getItem('lastAdWatch');
+                
+                if (lastAdWatch) {
+                    const now = Date.now();
+                    const diff = now - parseInt(lastAdWatch);
+                    const cooldown = 60 * 1000; // 1 minute cooldown
+                    const remaining = Math.ceil((cooldown - diff) / 1000);
+                    
+                    if (diff < cooldown) {
+                        watchAdBtn.disabled = true;
+                        cooldownMessage.textContent = `Please wait ${remaining} seconds before watching another ad`;
+                        cooldownMessage.style.display = 'block';
+                        
+                        // Update countdown
+                        const countdown = setInterval(function() {
+                            const newRemaining = Math.ceil((cooldown - (Date.now() - parseInt(lastAdWatch))) / 1000);
+                            
+                            if (newRemaining <= 0) {
+                                clearInterval(countdown);
+                                watchAdBtn.disabled = false;
+                                cooldownMessage.style.display = 'none';
+                            } else {
+                                cooldownMessage.textContent = `Please wait ${newRemaining} seconds before watching another ad`;
+                            }
+                        }, 1000);
+                    }
+                }
+            }
+        });
+    </script>
 </body>
-</html>
+</html> 
