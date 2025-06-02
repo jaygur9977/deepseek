@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,7 +25,58 @@
             <p>Each ad you watch will earn you between $0.10 and $1.00</p>
             
             <div id="ad-display">
-                <!-- Ad content will be loaded here -->
+                
+                <p>Ready to watch an ad? Click the button below!</p>
+            </div>
+            
+            <button id="watch-ad-btn">Watch Ad & Earn Money</button>
+            
+            <div id="earnings-message" style="display: none;">
+                <p>You earned $<span id="earned-amount">0.00</span>!</p>
+                <p>Your new balance is $<span id="new-balance">0.00</span></p>
+            </div>
+            
+           
+            <div class="adsense-ad" style="margin-top: 20px; padding: 10px; border: 1px dashed #ccc;">
+                <p>Google AdSense Ad Would Display Here</p>
+                <small>(In a real implementation, this would show actual ads from Google AdSense)</small>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Ads - Earn Money</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Watch Ads & Earn Money</h1>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/watch-ad" class="active">Watch Ads</a>
+                <a href="/" id="logout">Logout</a>
+            </nav>
+        </header>
+        
+        <div class="ad-container">
+            <h2>Click below to watch an ad and earn money</h2>
+            <p>Each ad you watch will earn you between $0.10 and $1.00</p>
+            
+            <div id="ad-display">
                 <p>Ready to watch an ad? Click the button below!</p>
             </div>
             
@@ -44,6 +95,43 @@
         </div>
     </div>
 
-    <script src="/js/script.js"></script>
+    <!-- ✅ PropellerAds Interstitial Ad Script -->
+    <script>
+        (function(d, z, s) {
+            s.src = 'https://' + d + '/401/' + z;
+            try {
+                (document.body || document.documentElement).appendChild(s)
+            } catch (e) {}
+        })('groleegni.net', 9403877, document.createElement('script'));
+    </script>
+
+    <!-- ✅ Earnings Script -->
+    <script>
+        let balance = parseFloat(localStorage.getItem('balance')) || 0;
+
+        document.getElementById('watch-ad-btn').addEventListener('click', function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerText = "Watching ad... please wait 30 sec ⏳";
+
+            // Trigger the Interstitial ad
+            // Propeller handles this automatically when script is loaded
+
+            // Start 30-sec timer
+            setTimeout(() => {
+                // Generate random earning
+                const earned = (Math.random() * (1.00 - 0.10) + 0.10).toFixed(2);
+                balance += parseFloat(earned);
+                localStorage.setItem('balance', balance.toFixed(2));
+
+                document.getElementById('earned-amount').innerText = earned;
+                document.getElementById('new-balance').innerText = balance.toFixed(2);
+                document.getElementById('earnings-message').style.display = 'block';
+
+                btn.disabled = false;
+                btn.innerText = "Watch Ad & Earn Money";
+            }, 30000);
+        });
+    </script>
 </body>
 </html>
