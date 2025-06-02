@@ -1,14 +1,11 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch Ads - Earn Money</title>
     <link rel="stylesheet" href="/css/style.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2273253474084136"
-     crossorigin="anonymous"></script>
-
-     <meta name="google-adsense-account" content="ca-pub-2273253474084136">
+   <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
 </head>
 <body>
     <div class="container">
@@ -28,7 +25,7 @@
             <p>Each ad you watch will earn you between $0.10 and $1.00</p>
             
             <div id="ad-display">
-                <!-- Ad content will be loaded here -->
+              
                 <p>Ready to watch an ad? Click the button below!</p>
             </div>
             
@@ -38,8 +35,7 @@
                 <p>You earned $<span id="earned-amount">0.00</span>!</p>
                 <p>Your new balance is $<span id="new-balance">0.00</span></p>
             </div>
-            
-            <!-- Google AdSense placeholder -->
+           
             <div class="adsense-ad" style="margin-top: 20px; padding: 10px; border: 1px dashed #ccc;">
                 <p>Google AdSense Ad Would Display Here</p>
                 <small>(In a real implementation, this would show actual ads from Google AdSense)</small>
@@ -48,5 +44,207 @@
     </div>
 
     <script src="/js/script.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Ads - Earn Money</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .ad-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #watch-ad-btn {
+            padding: 12px 24px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #watch-ad-btn:hover {
+            background-color: #27ae60;
+        }
+        #ad-display {
+            min-height: 300px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+        }
+        #propeller-ad {
+            min-height: 250px;
+            display: none;
+        }
+        #ad-waiting, #earnings-message {
+            display: none;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Watch Ads & Earn Money</h1>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/watch-ad" class="active">Watch Ads</a>
+                <a href="/logout" id="logout">Logout</a>
+            </nav>
+        </header>
+        
+        <div class="ad-container">
+            <h2>Click below to watch an ad and earn money</h2>
+            <p>Each ad you watch will earn you between $0.10 and $1.00</p>
+            
+            <div id="ad-display">
+                <p>Ready to watch an ad? Click the button below!</p>
+                <!-- PropellerAds Ad Container -->
+                <div id="propeller-ad"></div>
+            </div>
+            
+            <button id="watch-ad-btn">Watch Ad & Earn Money</button>
+            
+            <div id="ad-waiting">
+                <p>Please watch the ad completely to earn money...</p>
+                <div class="loader"></div>
+            </div>
+            
+            <div id="earnings-message">
+                <p>You earned $<span id="earned-amount">0.00</span>!</p>
+                <p>Your new balance is $<span id="new-balance">0.00</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            
+            if (!token || !userId) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            // Initialize ad watching functionality
+            document.getElementById('watch-ad-btn').addEventListener('click', startAdProcess);
+        });
+
+        async function startAdProcess() {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            
+            if (!token || !userId) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            try {
+                // Show loading state
+                document.getElementById('ad-display').style.display = 'none';
+                document.getElementById('watch-ad-btn').style.display = 'none';
+                document.getElementById('ad-waiting').style.display = 'block';
+                
+                // Verify token first
+                const verifyResponse = await fetch('/api/verify-token', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const verifyData = await verifyResponse.json();
+                
+                if (!verifyData.success) {
+                    throw new Error('Session expired. Please login again.');
+                }
+                
+                // Load PropellerAds script
+                loadAdScript();
+                
+                // Show ad for 15 seconds (simulation)
+                setTimeout(async () => {
+                    try {
+                        const response = await fetch(`/api/watch-ad/${userId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            showEarnings(data.earnings, data.newBalance);
+                        } else {
+                            throw new Error(data.error || 'Failed to record earnings');
+                        }
+                    } catch (error) {
+                        handleError(error);
+                    }
+                }, 15000);
+            } catch (error) {
+                handleError(error);
+            }
+        }
+        
+        function loadAdScript() {
+            // PropellerAds Script Loading
+            const script = document.createElement('script');
+            script.src = 'https://example.com/propellerads-script.js'; // Replace with actual script
+            script.async = true;
+            document.getElementById('propeller-ad').appendChild(script);
+            document.getElementById('propeller-ad').style.display = 'block';
+        }
+        
+        function showEarnings(earnings, newBalance) {
+            document.getElementById('earned-amount').textContent = earnings.toFixed(2);
+            document.getElementById('new-balance').textContent = newBalance.toFixed(2);
+            document.getElementById('ad-waiting').style.display = 'none';
+            document.getElementById('earnings-message').style.display = 'block';
+            
+            // Reset for next ad after 3 seconds
+            setTimeout(() => {
+                document.getElementById('propeller-ad').innerHTML = '';
+                document.getElementById('propeller-ad').style.display = 'none';
+                document.getElementById('ad-display').style.display = 'block';
+                document.getElementById('watch-ad-btn').style.display = 'inline-block';
+                document.getElementById('earnings-message').style.display = 'none';
+            }, 3000);
+        }
+        
+        function handleError(error) {
+            console.error('Error:', error);
+            alert(error.message);
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            window.location.href = '/login';
+        }
+    </script>
 </body>
 </html>
