@@ -163,6 +163,23 @@ app.get('/watch-ad', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'watch-ad.html'));
 });
 
+// AdSense ads.txt route
+app.get('/ads.txt', (req, res) => {
+    const filePath = path.join(__dirname, 'ads.txt');
+    
+    // Check if file exists
+    if (fs.existsSync(filePath)) {
+        res.type('text/plain');
+        res.sendFile(filePath);
+    } else {
+        // Default content if file doesn't exist (replace with your actual AdSense publisher ID)
+        const defaultAdsTxt = 'google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0';
+        res.type('text/plain');
+        res.send(defaultAdsTxt);
+    }
+});
+
+// API Routes with improved security
 app.post('/api/register', async (req, res) => {
     try {
         const { username, password } = req.body;
