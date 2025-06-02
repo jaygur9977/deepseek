@@ -254,58 +254,32 @@ app.get('/api/user/:id', authenticate, async (req, res) => {
     }
 });
 
-// app.post('/api/watch-ad/:userId', authenticate, async (req, res) => {
-//     try {
-//         if (req.user._id.toString() !== req.params.userId) {
-//             throw new Error('Unauthorized action');
-//         }
+app.post('/api/watch-ad/:userId', authenticate, async (req, res) => {
+    try {
+        if (req.user._id.toString() !== req.params.userId) {
+            throw new Error('Unauthorized action');
+        }
         
-//         const user = await User.findById(req.params.userId);
-//         if (!user) throw new Error('User not found');
+        const user = await User.findById(req.params.userId);
+        if (!user) throw new Error('User not found');
         
-//         // Add random earnings between 0.10 and 1.00
-//         const earnings = (Math.random() * 0.9 + 0.1).toFixed(2);
-//         user.balance += parseFloat(earnings);
-//         user.adsWatched += 1;
-//         user.lastAdWatched = new Date();
+        // Add random earnings between 0.10 and 1.00
+        const earnings = (Math.random() * 0.9 + 0.1).toFixed(2);
+        user.balance += parseFloat(earnings);
+        user.adsWatched += 1;
+        user.lastAdWatched = new Date();
         
-//         await user.save();
+        await user.save();
         
-//         res.json({ 
-//             success: true, 
-//             earnings: parseFloat(earnings),
-//             newBalance: user.balance
-//         });
-//     } catch (error) {
-//         res.status(400).json({ success: false, error: error.message });
-//     }
-// });
-
-
-router.post('/api/watch-ad/:userId', authenticate, async (req, res) => {
-  try {
-    const userId = req.params.userId;
-
-    // Check if user exists in the database
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+        res.json({ 
+            success: true, 
+            earnings: parseFloat(earnings),
+            newBalance: user.balance
+        });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
     }
-
-    // Generate random earnings between $0.10 and $1.00
-    const earnings = parseFloat((Math.random() * (1.00 - 0.10) + 0.10).toFixed(2));
-    
-    // Update the user's balance
-    user.balance += earnings;
-    await user.save();
-
-    res.json({ success: true, earnings, newBalance: user.balance });
-  } catch (err) {
-    console.error("Watch Ad Error:", err);
-    res.status(500).json({ success: false, error: 'Internal server error' });
-  }
 });
-
 
 // Start server
 const PORT = process.env.PORT || 1211;
