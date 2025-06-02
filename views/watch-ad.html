@@ -51,7 +51,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,11 +91,35 @@
                 <p>Google AdSense Ad Would Display Here</p>
                 <small>(In a real implementation, this would show actual ads from Google AdSense)</small>
             </div>
+
+            <!-- Ad Blocker Detection -->
+            <div id="ad-blocker-warning" style="display: none; color: red;">
+                <p><strong>Ad Blocker Detected! Please disable it to earn rewards.</strong></p>
+            </div>
         </div>
     </div>
 
     <!-- ✅ PropellerAds Interstitial Ad Script -->
     <script>
+        // Add script to detect if ads are blocked
+        const checkAdBlocker = () => {
+            const adTest = document.createElement('div');
+            adTest.innerHTML = '&nbsp;';
+            adTest.className = 'adsbox';
+            document.body.appendChild(adTest);
+            setTimeout(() => {
+                if (!adTest.offsetHeight) {
+                    document.getElementById('ad-blocker-warning').style.display = 'block';
+                    document.getElementById('watch-ad-btn').disabled = true;
+                }
+                adTest.remove();
+            }, 100);
+        };
+
+        // Call ad blocker check
+        checkAdBlocker();
+
+        // PropellerAds interstitial ad script
         (function(d, z, s) {
             s.src = 'https://' + d + '/401/' + z;
             try {
@@ -119,11 +142,12 @@
 
             // Start 30-sec timer
             setTimeout(() => {
-                // Generate random earning
+                // Generate random earning between $0.10 and $1.00
                 const earned = (Math.random() * (1.00 - 0.10) + 0.10).toFixed(2);
                 balance += parseFloat(earned);
                 localStorage.setItem('balance', balance.toFixed(2));
 
+                // Update the UI with earnings info
                 document.getElementById('earned-amount').innerText = earned;
                 document.getElementById('new-balance').innerText = balance.toFixed(2);
                 document.getElementById('earnings-message').style.display = 'block';
