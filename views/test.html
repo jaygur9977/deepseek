@@ -54,11 +54,19 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Click the button below</h2>
-        <button class="btn" onclick="window.location.href='https://otieu.com/4/9403868'">
-            Go to Website
+     <div class="container">
+        <h2>Click the button below to continue</h2>
+        <button class="btn" id="redirectButton">
+            Continue
         </button>
+        <p class="disclaimer">By clicking, you agree to our terms of service</p>
     </div>
+
+    <script>
+        document.getElementById('redirectButton').addEventListener('click', function() {
+            // You can add any pre-redirect logic here if needed
+            window.location.href = 'https://otieu.com/4/9403868';
+        });
+    </script>
 </body>
 </html>
