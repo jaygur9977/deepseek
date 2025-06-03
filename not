@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adsterra Video Ad Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #adsterrea-video-container {
+            width: 640px;
+            height: 360px;
+            margin: 20px auto;
+            background-color: #000;
+            position: relative;
+        }
+        #content-video {
+            width: 640px;
+            height: 360px;
+            margin: 20px auto;
+            display: block;
+        }
+        .ad-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            z-index: 100;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Website Content</h1>
+    <p>This is an example page demonstrating Adsterra video ads integration.</p>
+    
+    <!-- Video Ad Container -->
+    <div id="adsterrea-video-container">
+        <div class="ad-label">Advertisement</div>
+    </div>
+    
+    <!-- Content Video (optional) -->
+    <video id="content-video" controls>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    
+    <button id="play-ad">Trigger Video Ad</button>
+    
+    <!-- Google IMA SDK -->
+    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    
+    <script>
+        // Replace with your actual Adsterra publisher ID
+        const publisherId = 'YOUR_PUB_ID';
+        const vastTag = `https://vast.adsterra.com/?pid=${publisherId}&nonskip=1`;
+        
+        // Initialize ad display container
+        const adContainer = document.getElementById('adsterrea-video-container');
+        const contentVideo = document.getElementById('content-video');
+        const playAdButton = document.getElementById('play-ad');
+        
+        // Create ad display container
+        const adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, contentVideo);
+        const adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+        
+        // Set up event listeners
+        adsLoader.addEventListener(
+            google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+            onAdsManagerLoaded,
+            false
+        );
+        
+        adsLoader.addEventListener(
+            google.ima.AdErrorEvent.Type.AD_ERROR,
+            onAdError,
+            false
+        );
+        
+        function init() {
+            adDisplayContainer.initialize();
+            
+            // Set up ads request
+            const adsRequest = new google.ima.AdsRequest();
+            adsRequest.adTagUrl = vastTag;
+            
+            // Specify the linear and nonlinear ad slot sizes
+            adsRequest.linearAdSlotWidth = 640;
+            adsRequest.linearAdSlotHeight = 360;
+            
+            // Request ads
+            adsLoader.requestAds(adsRequest);
+        }
+        
+        function onAdsManagerLoaded(adsManagerLoadedEvent) {
+            // Get the ads manager
+            const adsManager = adsManagerLoadedEvent.getAdsManager(contentVideo);
+            
+            // Add event listeners
+            adsManager.addEventListener(
+                google.ima.AdErrorEvent.Type.AD_ERROR,
+                onAdError
+            );
+            
+            adsManager.addEventListener(
+                google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
+                onContentPauseRequested
+            );
+            
+            adsManager.addEventListener(
+                google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
+                onContentResumeRequested
+            );
+            
+            try {
+                // Initialize the ads manager
+                adsManager.init(640, 360, google.ima.ViewMode.NORMAL);
+                
+                // Start ad playback
+                adsManager.start();
+            } catch (adError) {
+                // Play the video content if ad fails
+                onAdError(adError);
+                contentVideo.play();
+            }
+        }
+        
+        function onAdError(adErrorEvent) {
+            console.error('Ad error:', adErrorEvent.getError());
+            adContainer.style.display = 'none';
+            contentVideo.play();
+        }
+        
+        function onContentPauseRequested() {
+            contentVideo.pause();
+        }
+        
+        function onContentResumeRequested() {
+            adContainer.style.display = 'none';
+            contentVideo.play();
+        }
+        
+        // Manual trigger for the ad
+        playAdButton.addEventListener('click', function() {
+            adContainer.style.display = 'block';
+            contentVideo.pause();
+            init();
+        });
+        
+        // Auto-load ad on page load (optional)
+        // window.addEventListener('load', init);
+    </script>
+</body>
+</html>
