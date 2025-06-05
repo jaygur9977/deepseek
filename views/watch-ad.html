@@ -8,7 +8,7 @@
     <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
     <meta name='admaven-placement' content=BqdY4rTs6>
     
-    <!-- Vignette Banner (Loads early) -->
+    <!-- Vignette Banner -->
     <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('gizokraijaw.net',9414090,document.createElement('script'))</script>
     
     <!-- Push Notifications -->
@@ -39,6 +39,7 @@
             width: 100%;
             height: 100%;
             border: none;
+            background: white;
         }
         #ad-timer {
             color: white;
@@ -64,15 +65,6 @@
             margin-top: 10px;
             font-weight: bold;
         }
-        .fullscreen-ad {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            background: white;
-        }
         .ad-container {
             margin: 20px auto;
             padding: 15px;
@@ -85,9 +77,40 @@
             max-width: 1200px;
             margin: 20px auto;
         }
+        #refresh-counter {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 100;
+        }
+        .fallback-ad {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+        }
     </style>
+      <style>
+        .banner-ad {
+            width: 728px;
+            height: 90px;
+            margin: auto;
+            overflow: hidden;
+            text-align: center;
+        }
+    </style>
+    
 </head>
 <body>
+    <div id="refresh-counter">Refreshing in: 20s</div>
+
     <!-- Top Banner Ad -->
     <div class="top-banner-ad">
         <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
@@ -100,6 +123,11 @@
         <div class="ad-container">
             <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
         </div>
+ <div class="banner-ad">
+        <iframe src="https://www.profitableratecpm.com/q4g5g3fi2?key=22cf6b4251e024c364e3d096522e4947"
+                width="728" height="90" frameborder="0" scrolling="no">
+        </iframe>
+    </div>
 
         <header>
             <h1>Watch Ads & Earn Money</h1>
@@ -137,6 +165,11 @@
                 </a>
             </div>
         </div>
+         <div class="banner-ad">
+        <iframe src="https://www.profitableratecpm.com/q4g5g3fi2?key=22cf6b4251e024c364e3d096522e4947"
+                width="728" height="90" frameborder="0" scrolling="no">
+        </iframe>
+    </div>
     </div>
 
     <!-- Bottom Banner Ad -->
@@ -146,8 +179,13 @@
 
     <div id="ad-popup">
         <div id="ad-frame-container">
-            <!-- OnClick (Popunder) will trigger when iframe is clicked -->
-            <iframe id="ad-frame" src="about:blank"></iframe>
+            <!-- Fallback ad content that will show if the iframe fails -->
+            <div id="fallback-ad" class="fallback-ad" style="display: none;">
+                <!-- In-Page Push Fallback Ad -->
+                <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
+            </div>
+            <iframe id="ad-frame" src="about:blank" onerror="showFallbackAd()"></iframe>
+            <!-- OnClick (Popunder) -->
             <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://al5sm.com/tag.min.js',9404001,document.body||document.documentElement)</script>
         </div>
         <div id="ad-timer">30</div>
@@ -155,6 +193,57 @@
     </div>
 
     <script>
+        // Page refresh functionality
+        let refreshInterval = 20000; // 20 seconds
+        let timeLeft = refreshInterval / 1000;
+        const refreshCounter = document.getElementById('refresh-counter');
+        
+        // Update counter every second
+        const counterInterval = setInterval(() => {
+            timeLeft--;
+            refreshCounter.textContent = `Refreshing in: ${timeLeft}s`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(counterInterval);
+                window.location.reload();
+            }
+        }, 1000);
+        
+        // Function to show fallback ad
+        function showFallbackAd() {
+            document.getElementById('fallback-ad').style.display = 'flex';
+            document.getElementById('ad-frame').style.display = 'none';
+        }
+        
+        // Store scroll position before refresh
+        window.onbeforeunload = function() {
+            localStorage.setItem('scrollPosition', window.scrollY);
+        };
+        
+        // Restore scroll position after refresh
+        window.onload = function() {
+            const scrollPosition = localStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, parseInt(scrollPosition));
+                localStorage.removeItem('scrollPosition');
+            }
+            
+            if (localStorage.getItem('showEarnings')) {
+                const earnings = localStorage.getItem('lastEarnings');
+                const newBalance = localStorage.getItem('currentBalance');
+                
+                if (earnings && newBalance) {
+                    document.getElementById('earned-amount').textContent = earnings;
+                    document.getElementById('new-balance').textContent = newBalance;
+                    document.getElementById('earnings-message').style.display = 'block';
+                }
+                
+                localStorage.removeItem('showEarnings');
+                localStorage.removeItem('lastEarnings');
+                localStorage.removeItem('currentBalance');
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             const watchAdBtn = document.getElementById('watch-ad-btn');
             const adPopup = document.getElementById('ad-popup');
@@ -167,7 +256,6 @@
             const adFrame = document.getElementById('ad-frame');
             
             checkAuthStatus();
-            
             checkAdCooldown();
             
             watchAdBtn.addEventListener('click', function() {
@@ -176,6 +264,10 @@
                     window.location.href = '/';
                     return;
                 }
+                
+                // Pause the refresh timer during ad view
+                clearInterval(counterInterval);
+                refreshCounter.style.display = 'none';
                 
                 adPopup.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
@@ -202,9 +294,17 @@
                 adPopup.style.display = 'none';
                 document.body.style.overflow = 'auto';
                 adFrame.src = 'about:blank';
+                document.getElementById('fallback-ad').style.display = 'none';
+                adFrame.style.display = 'block';
                 closeAdBtn.style.display = 'none';
                 creditEarnings();
                 setAdCooldown();
+                
+                // Restart the refresh counter
+                timeLeft = refreshInterval / 1000;
+                refreshCounter.style.display = 'block';
+                clearInterval(counterInterval);
+                setCounterInterval();
             });
             
             function loadMonetizedAd() {
@@ -216,7 +316,37 @@
                 ];
                 
                 const randomAdUrl = monetizedAdUrls[Math.floor(Math.random() * monetizedAdUrls.length)];
+                
+                // Set a timeout to show fallback if iframe doesn't load
+                const fallbackTimeout = setTimeout(() => {
+                    if (adFrame.contentDocument && adFrame.contentDocument.readyState === 'complete') {
+                        if (adFrame.contentDocument.body.children.length === 0) {
+                            showFallbackAd();
+                        }
+                    } else {
+                        showFallbackAd();
+                    }
+                }, 2000);
+                
+                adFrame.onload = function() {
+                    clearTimeout(fallbackTimeout);
+                    if (adFrame.contentDocument.body.children.length === 0) {
+                        showFallbackAd();
+                    }
+                };
+                
                 adFrame.src = randomAdUrl;
+            }
+            
+            function setCounterInterval() {
+                setInterval(() => {
+                    timeLeft--;
+                    refreshCounter.textContent = `Refreshing in: ${timeLeft}s`;
+                    
+                    if (timeLeft <= 0) {
+                        window.location.reload();
+                    }
+                }, 1000);
             }
             
             function isAuthenticated() {
@@ -232,19 +362,18 @@
             }
             
             function creditEarnings() {
-                const userId = localStorage.getItem('userId');
-                const token = localStorage.getItem('token');
-                
-                // Simulate earning between $0.10 and $1.00
                 const earnings = (Math.random() * 0.9 + 0.1).toFixed(2);
+                const currentBalance = parseFloat(localStorage.getItem('balance') || 0);
+                const updatedBalance = (currentBalance + parseFloat(earnings)).toFixed(2);
                 
-                // In a real implementation, you would make a fetch request to your backend
+                localStorage.setItem('showEarnings', 'true');
+                localStorage.setItem('lastEarnings', earnings);
+                localStorage.setItem('currentBalance', updatedBalance);
+                localStorage.setItem('balance', updatedBalance);
+                
                 earnedAmount.textContent = earnings;
-                newBalance.textContent = (parseFloat(localStorage.getItem('balance') || 0 + parseFloat(earnings)).toFixed(2));
+                newBalance.textContent = updatedBalance;
                 earningsMessage.style.display = 'block';
-                
-                // Update local storage
-                localStorage.setItem('balance', newBalance.textContent);
             }
             
             function setAdCooldown() {
@@ -258,7 +387,7 @@
                 if (lastAdWatch) {
                     const now = Date.now();
                     const diff = now - parseInt(lastAdWatch);
-                    const cooldown = 60 * 1000; // 1 minute cooldown
+                    const cooldown = 60 * 1000;
                     const remaining = Math.ceil((cooldown - diff) / 1000);
                     
                     if (diff < cooldown) {
