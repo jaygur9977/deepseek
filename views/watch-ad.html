@@ -1,415 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch Ads - Earn Money</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
-    <meta name='admaven-placement' content=BqdY4rTs6>
-    
-    <!-- Vignette Banner -->
-    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('gizokraijaw.net',9414090,document.createElement('script'))</script>
-    
-    <!-- Push Notifications -->
-    <script src="https://pertawee.net/act/files/tag.min.js?z=9403999" data-cfasync="false" async></script>
-    
-    <style>
-        #ad-popup {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        #ad-frame-container {
-            width: 90%;
-            height: 80%;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        #ad-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-        }
-        #ad-timer {
-            color: white;
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        #close-ad {
-            padding: 12px 30px;
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            display: none;
-        }
-        #watch-ad-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        #cooldown-message {
-            color: red;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        .ad-container {
-            margin: 20px auto;
-            padding: 15px;
-            background: #f8f8f8;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .top-banner-ad, .bottom-banner-ad {
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto;
-        }
-        #refresh-counter {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 100;
-        }
-        .fallback-ad {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-        }
-    </style>
-      <style>
-        .banner-ad {
-            width: 728px;
-            height: 90px;
-            margin: auto;
-            overflow: hidden;
-            text-align: center;
-        }
-    </style>
-    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch Ads - Earn Money</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="monetag" content="5976bdecaad58535d5dcfa2faf991618">
+  <meta name='admaven-placement' content=BqdY4rTs6>
+
+  <!-- ✅ Fake login for testing -->
+  <script>
+    if (!localStorage.getItem('token')) {
+      localStorage.setItem('token', 'demo-user-123');
+    }
+  </script>
+
+  <!-- Ad Scripts -->
+  <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('gizokraijaw.net',9414090,document.createElement('script'))</script>
+  <script src="https://pertawee.net/act/files/tag.min.js?z=9403999" data-cfasync="false" async></script>
+
+  <!-- Your Styles -->
+  <style>
+    #ad-popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #ad-frame-container { width: 90%; height: 80%; background: white; border-radius: 8px; overflow: hidden; }
+    #ad-frame { width: 100%; height: 100%; border: none; background: white; }
+    #ad-timer { color: white; font-size: 24px; margin: 20px 0; }
+    #close-ad {
+      padding: 12px 30px;
+      background: #ff4757;
+      color: white; border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+    #watch-ad-btn:disabled { background: #ccc; cursor: not-allowed; }
+    #cooldown-message {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .ad-container {
+      margin: 20px auto;
+      padding: 15px;
+      background: #f8f8f8;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .top-banner-ad, .bottom-banner-ad {
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+    #refresh-counter {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      z-index: 100;
+    }
+    .fallback-ad {
+      width: 100%; height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+    }
+    .banner-ad {
+      width: 728px;
+      height: 90px;
+      margin: auto;
+      overflow: hidden;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-    <div id="refresh-counter">Refreshing in: 20s</div>
+  <div id="refresh-counter">Refreshing in: 20s</div>
 
-    <!-- Top Banner Ad -->
-    <div class="top-banner-ad">
-        <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
+  <!-- Top Banner -->
+  <div class="top-banner-ad">
+    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
+  </div>
+
+  <div class="container">
+    <h1>Ad Earnings Platform</h1>
+
+    <div class="ad-container">
+      <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
     </div>
-    
-    <div class="container">
-        <h1>Ad Earnings Platform</h1>
-        
-        <!-- In-Page Push Ad -->
-        <div class="ad-container">
-            <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
+
+    <div class="banner-ad">
+      <iframe src="https://www.profitableratecpm.com/q4g5g3fi2?key=22cf6b4251e024c364e3d096522e4947"
+        width="728" height="90" frameborder="0" scrolling="no"></iframe>
+    </div>
+
+    <header>
+      <h1>Watch Ads & Earn Money</h1>
+      <nav>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/watch-ad" class="active">Watch Ads</a>
+        <a href="/" id="logout">Logout</a>
+      </nav>
+    </header>
+
+    <div class="ad-container">
+      <h2>Click below to watch an ad and earn money</h2>
+      <p>Each ad you watch will earn you between $0.10 and $1.00</p>
+
+      <div id="ad-display">
+        <div style="margin: 20px 0;">
+          <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
         </div>
- <div class="banner-ad">
-        <iframe src="https://www.profitableratecpm.com/q4g5g3fi2?key=22cf6b4251e024c364e3d096522e4947"
-                width="728" height="90" frameborder="0" scrolling="no">
-        </iframe>
+        <p>Ready to watch an ad? Click the button below!</p>
+      </div>
+
+      <button id="watch-ad-btn">Watch Ad & Earn Money</button>
+      <div id="cooldown-message" style="display: none;"></div>
+
+      <div id="earnings-message" style="display: none;">
+        <p>You earned $<span id="earned-amount">0.00</span>!</p>
+        <p>Your new balance is $<span id="new-balance">0.00</span></p>
+      </div>
+
+      <!-- Direct Ad -->
+      <div style="margin-top: 30px;">
+        <a href="https://otieu.com/4/9414086" target="_blank">
+          <img src="https://via.placeholder.com/728x90" alt="Advertisement" style="max-width:100%;height:auto;">
+        </a>
+      </div>
     </div>
 
-        <header>
-            <h1>Watch Ads & Earn Money</h1>
-            <nav>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/watch-ad" class="active">Watch Ads</a>
-                <a href="/" id="logout">Logout</a>
-            </nav>
-        </header>
-        
-        <div class="ad-container">
-            <h2>Click below to watch an ad and earn money</h2>
-            <p>Each ad you watch will earn you between $0.10 and $1.00</p>
-            
-            <div id="ad-display">
-                <!-- Native Banner Ad -->
-                <div style="margin: 20px 0;">
-                    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
-                </div>
-                <p>Ready to watch an ad? Click the button below!</p>
-            </div>
-            
-            <button id="watch-ad-btn">Watch Ad & Earn Money</button>
-            <div id="cooldown-message" style="display: none;"></div>
-            
-            <div id="earnings-message" style="display: none;">
-                <p>You earned $<span id="earned-amount">0.00</span>!</p>
-                <p>Your new balance is $<span id="new-balance">0.00</span></p>
-            </div>
-            
-            <!-- Direct Link Ad -->
-            <div style="margin-top: 30px;">
-                <a href="https://otieu.com/4/9414086" target="_blank">
-                    <img src="https://via.placeholder.com/728x90" alt="Advertisement" style="max-width:100%;height:auto;">
-                </a>
-            </div>
-        </div>
-         <div class="banner-ad">
-        <iframe src="https://www.profitableratecpm.com/q4g5g3fi2?key=22cf6b4251e024c364e3d096522e4947"
-                width="728" height="90" frameborder="0" scrolling="no">
-        </iframe>
+    <div class="banner-ad">
+      <iframe src="https://www.profitableratecpm.com/q4g5g3fi2?key=22cf6b4251e024c364e3d096522e4947"
+        width="728" height="90" frameborder="0" scrolling="no"></iframe>
     </div>
-    </div>
+  </div>
 
-    <!-- Bottom Banner Ad -->
-    <div class="bottom-banner-ad">
-        <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
-    </div>
+  <!-- Bottom Banner -->
+  <div class="bottom-banner-ad">
+    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9403877,document.createElement('script'))</script>
+  </div>
 
-    <div id="ad-popup">
-        <div id="ad-frame-container">
-            <!-- Fallback ad content that will show if the iframe fails -->
-            <div id="fallback-ad" class="fallback-ad" style="display: none;">
-                <!-- In-Page Push Fallback Ad -->
-                <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
-            </div>
-            <iframe id="ad-frame" src="about:blank" onerror="showFallbackAd()"></iframe>
-            <!-- OnClick (Popunder) -->
-            <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://al5sm.com/tag.min.js',9404001,document.body||document.documentElement)</script>
-        </div>
-        <div id="ad-timer">30</div>
-        <button id="close-ad">Close Ad</button>
+  <!-- Ad Popup Modal -->
+  <div id="ad-popup">
+    <div id="ad-frame-container">
+      <div id="fallback-ad" class="fallback-ad" style="display: none;">
+        <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9404028,document.createElement('script'))</script>
+      </div>
+      <iframe id="ad-frame" src="about:blank" onerror="showFallbackAd()"></iframe>
+      <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://al5sm.com/tag.min.js',9404001,document.body||document.documentElement)</script>
     </div>
+    <div id="ad-timer">30</div>
+    <button id="close-ad">Close Ad</button>
+  </div>
 
-    <script>
-        // Page refresh functionality
-        let refreshInterval = 20000; // 20 seconds
-        let timeLeft = refreshInterval / 1000;
-        const refreshCounter = document.getElementById('refresh-counter');
-        
-        // Update counter every second
-        const counterInterval = setInterval(() => {
-            timeLeft--;
-            refreshCounter.textContent = `Refreshing in: ${timeLeft}s`;
-            
-            if (timeLeft <= 0) {
-                clearInterval(counterInterval);
-                window.location.reload();
+  <!-- Scripts -->
+  <script>
+    let refreshInterval = 20000;
+    let timeLeft = refreshInterval / 1000;
+    const refreshCounter = document.getElementById('refresh-counter');
+    const counterInterval = setInterval(() => {
+      timeLeft--;
+      refreshCounter.textContent = `Refreshing in: ${timeLeft}s`;
+      if (timeLeft <= 0) {
+        clearInterval(counterInterval);
+        window.location.reload();
+      }
+    }, 1000);
+
+    function showFallbackAd() {
+      document.getElementById('fallback-ad').style.display = 'flex';
+      document.getElementById('ad-frame').style.display = 'none';
+    }
+
+    function checkAuthStatus() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('No login token found. Set for guest testing.');
+      }
+    }
+
+    function isAuthenticated() {
+      return localStorage.getItem('token') !== null;
+    }
+
+    function creditEarnings() {
+      const earnings = (Math.random() * 0.9 + 0.1).toFixed(2);
+      const currentBalance = parseFloat(localStorage.getItem('balance') || 0);
+      const updatedBalance = (currentBalance + parseFloat(earnings)).toFixed(2);
+
+      localStorage.setItem('showEarnings', 'true');
+      localStorage.setItem('lastEarnings', earnings);
+      localStorage.setItem('currentBalance', updatedBalance);
+      localStorage.setItem('balance', updatedBalance);
+
+      document.getElementById('earned-amount').textContent = earnings;
+      document.getElementById('new-balance').textContent = updatedBalance;
+      document.getElementById('earnings-message').style.display = 'block';
+    }
+
+    function checkAdCooldown() {
+      const lastAdWatch = localStorage.getItem('lastAdWatch');
+      const watchAdBtn = document.getElementById('watch-ad-btn');
+      const cooldownMessage = document.getElementById('cooldown-message');
+
+      if (lastAdWatch) {
+        const now = Date.now();
+        const diff = now - parseInt(lastAdWatch);
+        const cooldown = 60000;
+        const remaining = Math.ceil((cooldown - diff) / 1000);
+
+        if (diff < cooldown) {
+          watchAdBtn.disabled = true;
+          cooldownMessage.textContent = `Please wait ${remaining} seconds before watching another ad`;
+          cooldownMessage.style.display = 'block';
+
+          const countdown = setInterval(() => {
+            const newRemaining = Math.ceil((cooldown - (Date.now() - parseInt(lastAdWatch))) / 1000);
+            if (newRemaining <= 0) {
+              clearInterval(countdown);
+              watchAdBtn.disabled = false;
+              cooldownMessage.style.display = 'none';
+            } else {
+              cooldownMessage.textContent = `Please wait ${newRemaining} seconds before watching another ad`;
             }
-        }, 1000);
-        
-        // Function to show fallback ad
-        function showFallbackAd() {
-            document.getElementById('fallback-ad').style.display = 'flex';
-            document.getElementById('ad-frame').style.display = 'none';
+          }, 1000);
         }
-        
-        // Store scroll position before refresh
-        window.onbeforeunload = function() {
-            localStorage.setItem('scrollPosition', window.scrollY);
-        };
-        
-        // Restore scroll position after refresh
-        window.onload = function() {
-            const scrollPosition = localStorage.getItem('scrollPosition');
-            if (scrollPosition) {
-                window.scrollTo(0, parseInt(scrollPosition));
-                localStorage.removeItem('scrollPosition');
-            }
-            
-            if (localStorage.getItem('showEarnings')) {
-                const earnings = localStorage.getItem('lastEarnings');
-                const newBalance = localStorage.getItem('currentBalance');
-                
-                if (earnings && newBalance) {
-                    document.getElementById('earned-amount').textContent = earnings;
-                    document.getElementById('new-balance').textContent = newBalance;
-                    document.getElementById('earnings-message').style.display = 'block';
-                }
-                
-                localStorage.removeItem('showEarnings');
-                localStorage.removeItem('lastEarnings');
-                localStorage.removeItem('currentBalance');
-            }
-        };
+      }
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const watchAdBtn = document.getElementById('watch-ad-btn');
-            const adPopup = document.getElementById('ad-popup');
-            const adTimer = document.getElementById('ad-timer');
-            const closeAdBtn = document.getElementById('close-ad');
-            const earningsMessage = document.getElementById('earnings-message');
-            const earnedAmount = document.getElementById('earned-amount');
-            const newBalance = document.getElementById('new-balance');
-            const cooldownMessage = document.getElementById('cooldown-message');
-            const adFrame = document.getElementById('ad-frame');
-            
-            checkAuthStatus();
-            checkAdCooldown();
-            
-            watchAdBtn.addEventListener('click', function() {
-                if (!isAuthenticated()) {
-                    alert('Please login first');
-                    window.location.href = '/';
-                    return;
-                }
-                
-                // Pause the refresh timer during ad view
-                clearInterval(counterInterval);
-                refreshCounter.style.display = 'none';
-                
-                adPopup.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                
-                loadMonetizedAd();
-                
-                let seconds = 30;
-                adTimer.textContent = seconds;
-                
-                const timer = setInterval(function() {
-                    seconds--;
-                    adTimer.textContent = seconds;
-                    
-                    if (seconds <= 0) {
-                        clearInterval(timer);
-                        closeAdBtn.style.display = 'block';
-                    }
-                }, 1000);
-                
-                watchAdBtn.disabled = true;
-            });
-            
-            closeAdBtn.addEventListener('click', function() {
-                adPopup.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                adFrame.src = 'about:blank';
-                document.getElementById('fallback-ad').style.display = 'none';
-                adFrame.style.display = 'block';
-                closeAdBtn.style.display = 'none';
-                creditEarnings();
-                setAdCooldown();
-                
-                // Restart the refresh counter
-                timeLeft = refreshInterval / 1000;
-                refreshCounter.style.display = 'block';
-                clearInterval(counterInterval);
-                setCounterInterval();
-            });
-            
-            function loadMonetizedAd() {
-                // Real monetized ad URLs from Propeller
-                const monetizedAdUrls = [
-                    'https://otieu.com/4/9414086',
-                    'https://al5sm.com/redirect?zone=9404001',
-                    'https://vemtoutcheeg.com/400/9404028'
-                ];
-                
-                const randomAdUrl = monetizedAdUrls[Math.floor(Math.random() * monetizedAdUrls.length)];
-                
-                // Set a timeout to show fallback if iframe doesn't load
-                const fallbackTimeout = setTimeout(() => {
-                    if (adFrame.contentDocument && adFrame.contentDocument.readyState === 'complete') {
-                        if (adFrame.contentDocument.body.children.length === 0) {
-                            showFallbackAd();
-                        }
-                    } else {
-                        showFallbackAd();
-                    }
-                }, 2000);
-                
-                adFrame.onload = function() {
-                    clearTimeout(fallbackTimeout);
-                    if (adFrame.contentDocument.body.children.length === 0) {
-                        showFallbackAd();
-                    }
-                };
-                
-                adFrame.src = randomAdUrl;
-            }
-            
-            function setCounterInterval() {
-                setInterval(() => {
-                    timeLeft--;
-                    refreshCounter.textContent = `Refreshing in: ${timeLeft}s`;
-                    
-                    if (timeLeft <= 0) {
-                        window.location.reload();
-                    }
-                }, 1000);
-            }
-            
-            function isAuthenticated() {
-                return localStorage.getItem('token') !== null;
-            }
-            
-            function checkAuthStatus() {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    alert('Please login to watch ads');
-                    window.location.href = '/';
-                }
-            }
-            
-            function creditEarnings() {
-                const earnings = (Math.random() * 0.9 + 0.1).toFixed(2);
-                const currentBalance = parseFloat(localStorage.getItem('balance') || 0);
-                const updatedBalance = (currentBalance + parseFloat(earnings)).toFixed(2);
-                
-                localStorage.setItem('showEarnings', 'true');
-                localStorage.setItem('lastEarnings', earnings);
-                localStorage.setItem('currentBalance', updatedBalance);
-                localStorage.setItem('balance', updatedBalance);
-                
-                earnedAmount.textContent = earnings;
-                newBalance.textContent = updatedBalance;
-                earningsMessage.style.display = 'block';
-            }
-            
-            function setAdCooldown() {
-                localStorage.setItem('lastAdWatch', Date.now());
-                checkAdCooldown();
-            }
-            
-            function checkAdCooldown() {
-                const lastAdWatch = localStorage.getItem('lastAdWatch');
-                
-                if (lastAdWatch) {
-                    const now = Date.now();
-                    const diff = now - parseInt(lastAdWatch);
-                    const cooldown = 60 * 1000;
-                    const remaining = Math.ceil((cooldown - diff) / 1000);
-                    
-                    if (diff < cooldown) {
-                        watchAdBtn.disabled = true;
-                        cooldownMessage.textContent = `Please wait ${remaining} seconds before watching another ad`;
-                        cooldownMessage.style.display = 'block';
-                        
-                        const countdown = setInterval(function() {
-                            const newRemaining = Math.ceil((cooldown - (Date.now() - parseInt(lastAdWatch))) / 1000);
-                            
-                            if (newRemaining <= 0) {
-                                clearInterval(countdown);
-                                watchAdBtn.disabled = false;
-                                cooldownMessage.style.display = 'none';
-                            } else {
-                                cooldownMessage.textContent = `Please wait ${newRemaining} seconds before watching another ad`;
-                            }
-                        }, 1000);
-                    }
-                }
-            }
-        });
-    </script>
+    function setAdCooldown() {
+      localStorage.setItem('lastAdWatch', Date.now());
+      checkAdCooldown();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const watchAdBtn = document.getElementById('watch-ad-btn');
+      const adPopup = document.getElementById('ad-popup');
+      const adTimer = document.getElementById('ad-timer');
+      const closeAdBtn = document.getElementById('close-ad');
+      const adFrame = document.getElementById('ad-frame');
+
+      checkAuthStatus();
+      checkAdCooldown();
+
+      watchAdBtn.addEventListener('click', function () {
+        adPopup.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        const adUrls = [
+          'https://otieu.com/4/9414086',
+          'https://al5sm.com/redirect?zone=9404001',
+          'https://vemtoutcheeg.com/400/9404028'
+        ];
+
+        const randomAdUrl = adUrls[Math.floor(Math.random() * adUrls.length)];
+        adFrame.src = randomAdUrl;
+
+        let seconds = 30;
+        adTimer.textContent = seconds;
+        const timer = setInterval(function () {
+          seconds--;
+          adTimer.textContent = seconds;
+          if (seconds <= 0) {
+            clearInterval(timer);
+            closeAdBtn.style.display = 'block';
+          }
+        }, 1000);
+
+        watchAdBtn.disabled = true;
+      });
+
+      closeAdBtn.addEventListener('click', function () {
+        adPopup.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('fallback-ad').style.display = 'none';
+        adFrame.src = 'about:blank';
+        closeAdBtn.style.display = 'none';
+
+        creditEarnings();
+        setAdCooldown();
+      });
+    });
+  </script>
 </body>
 </html>
